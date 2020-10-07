@@ -46,7 +46,7 @@ export default {
   },
   methods:{
     saveEmployee:function(){
-    this.employees.push(this.newEmp)
+    this.employees.push({ id: this.newEmp.id, name: this.newEmp.name })
     }
   },
   data() {
