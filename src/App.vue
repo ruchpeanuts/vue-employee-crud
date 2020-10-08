@@ -1,67 +1,41 @@
 <template>
   <b-container>
-    <div>
-      <b-btn
-        class="float-md-right"
-        variant="primary"
-        @click="state = 'editEmployee'"
-        v-show="state === 'default'"
-      >
-        Add Employee
-      </b-btn>
+    <h1>Employees</h1>
 
-      <div v-show="state === 'editEmployee'">
-        <b-form>
-          <b-row>
-            <b-col>
-              <label>Employee Id-number</label>
-            </b-col>
-            <b-col>
-              <input type="Number" v-model="newEmp.id" />
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <label>Employee Name</label>
-            </b-col>
-            <b-col>
-              <input type="text" placeholder="snoopy" v-model="newEmp.name" />
-            </b-col>
-          </b-row>
-          <div class="float-md-right">
-            <b-btn variant="primary" @click="saveEmployee">
-              Save Employee
-            </b-btn>
-          </div>
-        </b-form>
-      </div>
-    </div>
-    <employee-table :employees="employees" />
-    <!-- 
-     style="background-image: url('https://picsum.photos/1140/1140');"
-     -->
+    <employee-form @save:employee="saveEmployee" />
+
+    <employee-table
+      :employees="employees"
+      @delete:employee="deleteEmployee"
+      @edit:employee="editEmployee"
+    />
   </b-container>
 </template>
 <script>
 import EmployeeTable from "@/components/EmployeeTable.vue";
-
+import EmployeeForm from "@/components/EmployeeForm.vue";
 export default {
   components: {
     EmployeeTable,
+    EmployeeForm,
   },
   methods: {
-    saveEmployee: function() {
-      this.employees.push({ id: this.newEmp.id, name: this.newEmp.name });
+    saveEmployee: function(newEmp) {
+      console.log("testing handleSubmit in parent", newEmp);
+
+      this.employees = [...this.employees, newEmp];
+    },
+    deleteEmployee(id) {
+      this.employees = this.employees.filter((employee) => employee.id != id);
+    },
+    editEmployee(id, updatedEmployee) {
+      this.employees = this.employees.map((employee) =>
+        employee.id === id ? updatedEmployee : employee
+      );
     },
   },
   data() {
     return {
-      state: "default",
-      showAlert: false,
-      newEmp: {
-        id: "",
-        name: "",
-      },
       employees: [
         {
           id: 1,
@@ -80,3 +54,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.btn {
+  margin: 10px;
+  margin-right: 140px;
+}
+.btn.btn-outline-primary {
+  margin-right: 10px;
+  margin-top: 75px;
+}
+.editblock {
+  height: 130px;
+}
+.material-icons {
+  font-size: 15px;
+}
+</style>
